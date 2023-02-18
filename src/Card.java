@@ -1,3 +1,6 @@
+import javax.swing.*;
+import java.awt.Image;
+
 /**
  * Joshua Benyo Baker
  * December 8 2022
@@ -7,6 +10,8 @@ public class Card
     private String suit;
     private String rank;
     private int point;
+
+    private Image image;
 
     //returns the suit of the card
     public String getSuit() {
@@ -19,10 +24,11 @@ public class Card
     }
 
     //constructor
-    public Card(String suit, String rank, int point) {
+    public Card(String suit, String rank, int point, Image i) {
         this.suit = suit;
         this.rank = rank;
         this.point = point;
+        this.image = i;
     }
 
     //returns the rank of the card
@@ -49,5 +55,10 @@ public class Card
     public String toString()
     {
         return rank + " of " + suit;
+    }
+
+    public Image getPicture()
+    {
+        return image;
     }
 }

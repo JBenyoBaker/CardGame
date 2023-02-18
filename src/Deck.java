@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Deck
 {
     ArrayList<Card> deck = new ArrayList<Card>();
-    int numCardsLeft;
+    private int numCardsLeft;
 
     //constructor
     public Deck(ArrayList<Card> deck)

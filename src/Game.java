@@ -2,6 +2,8 @@
  * Joshua Benyo Baker
  * December 8 2022
  */
+import javax.swing.*;
+import java.awt.*;
 import java.sql.Array;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -12,14 +14,20 @@ import java.util.Scanner;
 
 public class Game
 {
+    private CardGameView view;
+    public Game()
+    {
+        this.view = new CardGameView(this);
+    }
     //main method
     public static void main(String[] args)
     {
-        PlayGame();
+        Game game = new Game();
+        game.PlayGame();
     }
 
     //runs the game
-    public static void PlayGame()
+    public void PlayGame()
     {
         Scanner reader = new Scanner(System.in);
         System.out.println("What is your name?");
@@ -28,14 +36,16 @@ public class Game
 
         Deck d = createPokerDeck();
 
-        while (d.getNumCardsLeft() < 13)
+        for (int i = 0; i < 3; i++)
         {
             System.out.println("------------------------");
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXX");
             System.out.println("------------------------");
             dealHand(user, computer, d);
+            view.paintNew(view.getGraphics(), user, computer);
             drawCards(user, reader, d);
             Player winner = findWinner(user, computer);
+            view.revealWinner(view.getGraphics(), user, computer, winner);
             System.out.println();
             user.printHand();
             System.out.println();
@@ -43,6 +53,21 @@ public class Game
             System.out.println();
             System.out.println(winner.getName() + " wins the round!");
             System.out.println();
+            boolean b = true;
+            while (b)
+            {
+                System.out.println("Would you like to play another round?(y/n)");
+                reader.nextLine();
+                if (reader.nextLine().equals("y"))
+                {
+                    b = false;
+                }
+                else
+                {
+                    System.out.println("Exit the poker window to stop the game.");
+                    b = false;
+                }
+            }
             user.clearHand();
             computer.clearHand();
         }
@@ -55,21 +80,22 @@ public class Game
         ArrayList<Card> d = new ArrayList<Card>();
         Deck deck = new Deck(d);
 
-        for (int i = 1; i < 13; i++) {
+        for (int i = 1; i < 14; i++)
+        {
             String r;
-            if (i < 9)
+            if (i < 10)
             {
                 r = String.valueOf(i + 1);
             }
-            else if (i == 9)
+            else if (i == 10)
             {
                 r = "Jack";
             }
-            else if (i == 10)
+            else if (i == 11)
             {
                 r = "Queen";
             }
-            else if (i == 11)
+            else if (i == 12)
             {
                 r = "King";
             }
@@ -77,18 +103,39 @@ public class Game
             {
                 r = "Ace";
             }
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < 4; j++)
+            {
+                //suitLoc helps determine which number corresponds to which card in the resources folder
+                int suitLoc;
                 String suit = " ";
-                if (j == 0) {
+                if (j == 0)
+                {
+                    suitLoc = 2;
                     suit = "Hearts";
-                } else if (j == 1) {
+                }
+                else if (j == 1)
+                {
+                    suitLoc = 1;
                     suit = "Spades";
-                } else if (j == 2) {
+                }
+                else if (j == 2)
+                {
+                    suitLoc = 4;
                     suit = "Clubs";
-                } else if (j == 3) {
+                }
+                else
+                {
+                    suitLoc = 3;
                     suit = "Diamonds";
                 }
-                Card x = new Card(suit, r, i + 1);
+                //location corresponds to the number associated with the card in the resources folder
+                String location = Integer.toString(suitLoc + (i * 4));
+                if ((i * 4) >= 52)
+                {
+                    location = Integer.toString((j + 1));
+                }
+                Image c = new ImageIcon("Resources/" + location + ".png").getImage();
+                Card x = new Card(suit, r, i + 1, c);
                 d.add(x);
             }
         }
